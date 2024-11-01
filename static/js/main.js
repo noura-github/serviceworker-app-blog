@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    console.log('Activate Service Worker')
+    console.log('Register Service Worker')
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register(href = 'sw.js')
         .then(function(registration) {

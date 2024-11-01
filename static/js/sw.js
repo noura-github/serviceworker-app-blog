@@ -1,71 +1,61 @@
+
+// Cache version
+const cache_name = 'v1';
+
+// Urls to cache
+const urls_to_cache = [
+    '/',
+    '/employee',
+    '/about',
+    '/static/css/styles.css',
+    '/static/js/main.js',
+    '/static/js/employee.js',
+];
+
 self.addEventListener('install', function(event) {
     console.log('Installing ...');
     event.waitUntil(
-        caches.open('sw-cache').then(function(cache) {
+        caches.open(cache_name).then(function(cache) {
             console.log('Caching data ...');
-            return cache.addAll([
-                '/',
-                //'templates/about.html',
-                //'templates/employee.html',
-                '/static/css/styles.css',
-                '/static/js/main.js',
-            ]);
+            return cache.addAll(urls_to_cache);
         })
     );
 });
-self.addEventListener('fetch', function(event) {
-    console.log('Fetching data ...');
-    event.respondWith(
-        caches.match(event.request).then(function(response) {
-            return response || fetch(event.request);
-        })
-   );
-});
 
-/*const CACHE_NAME = 'v1'; // Cache version
-const URLS_TO_CACHE = [
-  '/',
-  '/templates/index.html',
-  '/templates/offline.html'
-  '/styles.css',
-  '/js/script.js',
-];
- 
-// Install event: Cache resources during service worker installation
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('Caching files...');
-        return cache.addAll(URLS_TO_CACHE);
-      })
-  );
-});
- 
-// Fetch event: Serve cached content when offline
-self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => {
-        return response || fetch(event.request);
-      })
-      .catch(() => caches.match('/offline.html'))
-  );
-});
- 
 // Activate event: Clean up old caches
 self.addEventListener('activate', event => {
-  const cacheWhitelist = [CACHE_NAME];
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (!cacheWhitelist.includes(cacheName)) {
-            console.log('Deleting old cache:', cacheName);
-            return caches.delete(cacheName);
-          }
+    console.log('Activating ...');
+    const cacheWhitelist = [cache_name];
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => {
+                    if (!cacheWhitelist.includes(cacheName)) {
+                    console.log('Deleting old cache:', cacheName);
+                    return caches.delete(cacheName);
+                    }
+                })
+            );
         })
-      );
-    })
-  );
-});*/
+    );
+});
+
+self.addEventListener("fetch", (event) => {
+    console.log('Fetching data ...');
+    // Intercept the network request to handle it
+    event.respondWith(
+        (async () => {
+        // Search the response first in a cache
+        let cache = await caches.open(cache_name);
+        let cachedResponse = await cache.match(event.request);
+        console.log("cachedResponse:", cachedResponse)
+
+        // Return a response if it is found in the cache
+        if (cachedResponse) return cachedResponse;
+
+        console.log("event.request:", event.request)
+        // If no response is already cached, use the network
+        return fetch(event.request);
+    })(),
+    );
+});

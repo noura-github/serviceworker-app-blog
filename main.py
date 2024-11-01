@@ -1,16 +1,52 @@
-# This is a sample Python script.
+from flask import Flask, jsonify, render_template, send_from_directory, request
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+app = Flask(__name__)
 
 
-# Press the green button in the gutter to run the script.
+employees_data = [
+    {'first_name': 'Jack', 'last_name': 'Sparrow', 'email': 'jack@gmail.com'},
+    {'first_name': 'Mary', 'last_name': 'Cruze', 'email': 'mary@gmail.com'},
+    {'first_name': 'Hony', 'last_name': 'Moon', 'email': 'hony@gmail.com'},
+    {'first_name': 'Tanya', 'last_name': 'Crood', 'email': 'tanya@yahoo.com'},
+]
+
+
+# Route for Home Page
+@app.route('/')
+def index():
+    # Render the index.html file
+    return render_template('index.html')
+
+
+# Route for About Page
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+
+# Route for Contact Page
+@app.route('/employee')
+def employee():
+    return render_template('employee.html', employees_data=employees_data)
+
+
+# Serve the service worker with the 'Service-Worker-Allowed' header
+@app.route('/sw.js')
+def service_worker():
+    response = send_from_directory('static/js', 'sw.js')
+    response.headers['Service-Worker-Allowed'] = '/'
+    return response
+
+
+# Route to handle AJAX POST request
+@app.route('/load_employees', methods=['GET'])
+def load_employees():
+    # Send a JSON response back to the client
+    return jsonify({
+        'status': 'success',
+        'employees_data': employees_data
+    })
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    app.run(debug=True)

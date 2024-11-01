@@ -4,35 +4,22 @@
     <h1>About Us</h1>
     <p>This is the employee List</p>
 
-<table>
-    <thead>
-       <tr>
-    <th>Firstname</th>
-    <th>Lastname</th>
-    <th>Email</th>
-  </tr>
-  </thead>
-  <tbody id="myTable">
-  <tr>
-    <td>Jack</td>
-    <td>Sparrow</td>
-    <td>jack@gmail.com</td>
-  </tr>
-  <tr>
-    <td>Mary</td>
-    <td>Cruze</td>
-    <td>mary@gmail.com</td>
-  </tr>
-  <tr>
-    <td>Hony</td>
-    <td>Moon</td>
-    <td>hony@gmail.com</td>
-  </tr>
-  <tr>
-    <td>Tanya</td>
-    <td>Crood</td>
-    <td>tanya@yahoo.com</td>
-  </tr>
-  </tbody>
-</table>
+    <table>
+        <thead>
+            <tr>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody id="myTable">
+            {% for item in employees_data %}
+                <tr>
+                    <td>{{ item.first_name }}</td>
+                    <td>{{ item.last_name }}</td>
+                    <td>{{ item.email }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
