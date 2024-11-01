@@ -38,15 +38,5 @@ def service_worker():
     return response
 
 
-# Route to handle AJAX POST request
-@app.route('/load_employees', methods=['GET'])
-def load_employees():
-    # Send a JSON response back to the client
-    return jsonify({
-        'status': 'success',
-        'employees_data': employees_data
-    })
-
-
 if __name__ == '__main__':
     app.run(debug=True)
