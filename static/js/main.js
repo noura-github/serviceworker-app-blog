@@ -1,6 +1,9 @@
 $(document).ready(function(){
+    registerServiceWorker();
+});
 
-    console.log('Register Service Worker')
+function registerServiceWorker() {
+    console.log('Register Service Worker ...')
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register(href = 'sw.js')
         .then(function(registration) {
@@ -10,4 +13,4 @@ $(document).ready(function(){
             console.log('Service Worker registration failed:', error);
         });
     }
-});
+}

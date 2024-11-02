@@ -1,6 +1,6 @@
 
-// Cache version
-const cache_name = 'v1';
+// Cache name
+const cache_name = 'sw-1';
 
 // Urls to cache
 const urls_to_cache = [
@@ -25,14 +25,14 @@ self.addEventListener('install', function(event) {
 // Activate event: Clean up old caches
 self.addEventListener('activate', event => {
     console.log('Activating ...');
-    const cacheWhitelist = [cache_name];
+    const cacheList = [cache_name];
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
-                cacheNames.map(cacheName => {
-                    if (!cacheWhitelist.includes(cacheName)) {
-                    console.log('Deleting old cache:', cacheName);
-                    return caches.delete(cacheName);
+                cacheNames.map(cName => {
+                    if (!cacheList.includes(cName)) {
+                        console.log('Deleting old cache:', cName);
+                        return caches.delete(cName);
                     }
                 })
             );
@@ -53,7 +53,6 @@ self.addEventListener("fetch", (event) => {
         // Return a response if it is found in the cache
         if (cachedResponse) return cachedResponse;
 
-        console.log("event.request:", event.request)
         // If no response is already cached, use the network
         return fetch(event.request);
     })(),
